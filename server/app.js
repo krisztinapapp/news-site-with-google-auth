@@ -18,18 +18,8 @@ const pool  = mysql.createPool({
     database: "news"
 });
 
-app.get('/api/readPosts', (req, res) => {
-    const sql = "SELECT * FROM posts";
-    pool.getConnection((err, con) => {
-        con.query(sql, (err, res) => {
-            if (err) throw err;
-            console.log(res);
-            return res;
-        });
-    });
-});
-
-app.post('/api/createPost', (req, res) => {
+// create new post
+app.post('/api/post', (req, res) => {
     const sql = "INSERT INTO posts (user, pictureURL, title, text) VALUES (?)";
     const values = [
         req.body.user,
@@ -39,9 +29,67 @@ app.post('/api/createPost', (req, res) => {
     ];
 
     pool.getConnection((err, con) => {
-        con.query(sql, [values], (err, res) => {
-            if (err) throw err;
-            return res;
+        if (err) res.status(500).end();
+        con.query(sql, [values], (error, result) => {
+            if (error) res.status(500).end();
+            res.status(200).end();
+        });
+    });
+});
+
+// read all posts
+app.get('/api/posts', (req, res) => {
+    const sql = "SELECT * FROM posts";
+    pool.getConnection((err, con) => {
+        if (err) res.status(500).end();
+        con.query(sql, (error, result) => {
+            if (error) res.status(500).end();
+            res.json(result);
+        });
+    });
+});
+
+// read a post
+app.get('/api/post/:id', (req, res) => {
+    const sql = "SELECT * FROM posts WHERE id = ?";
+    pool.getConnection((err, con) => {
+        if (err) res.status(500).end();
+        con.query(sql, [req.params.id], (error, result) => {
+            if (error) res.status(500).end();
+            res.json(result);
+        });
+    });
+});
+
+// update a post
+app.patch('/api/post', (req, res) => {
+    const sql = ```UPDATE posts SET 
+        title = ?,
+        text = ?
+        WHERE id = ?
+    ```;
+    const values = [
+        req.body.title,
+        req.body.text
+    ];
+
+    pool.getConnection((err, con) => {
+        if (err) res.status(500).end();
+        con.query(sql, [values, id], (error, result) => {
+            if (error) res.status(500).end();
+            res.status(200).end();
+        });
+    });
+});
+
+// delete a post
+app.delete('/api/post/:id', (req, res) => {
+    const sql = "DELETE FROM posts WHERE id = ?";
+    pool.getConnection((err, con) => {
+        if (err) res.status(500).end();
+        con.query(sql, [req.params.id], (error, result) => {
+            if (error) res.status(500).end();
+            res.status(200).end();
         });
     });
 });

@@ -1,24 +1,18 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import PostList from './PostList';
-import PostForm from './PostForm';
+import CreatePost from './CreatePost';
 import Profile, { ProfileProps } from './Profile';
 import { getUserData, createPost } from '../api';
 
-interface PostFormState {
-    title: string | null,
-    text: string | null
-}
+
 
 const HomePage = () => {
     const [ profileData, setProfileData ] = useState<ProfileProps>({
         name: null,
         pictureURL: undefined
     });
-    const [ values, setValues ] = useState<PostFormState>({
-        title: null,
-        text: null
-    });
+    
 
     const handleLogin = useGoogleLogin({
         onSuccess: (res) => {
@@ -34,20 +28,7 @@ const HomePage = () => {
         window.location.reload();
     };
 
-    const handleFormChange = (e : ChangeEvent<HTMLInputElement>  | ChangeEvent<HTMLTextAreaElement>) => {
-        setValues({...values, [e.target.name] : e.target.value});
-    }
-
-    const handleCreatePost = async (e : FormEvent<HTMLFormElement>) => {
-        const newPost = await createPost({
-            user: profileData.name,
-            pictureURL: profileData.pictureURL,
-            title: values.title,
-            text: values.text
-        }).catch((err) => console.log(err)
-        );
-        console.log(newPost);
-    }
+    
 
     useEffect(() => {
         const token: any = localStorage.getItem('token');
@@ -71,9 +52,14 @@ const HomePage = () => {
             {localStorage.getItem('token') != null && localStorage.getItem('token') !== 'undefined' ? (
             <div>
                 <Profile name={profileData.name} pictureURL={profileData.pictureURL} />
-                <PostForm handleFormChange={handleFormChange} createPost={handleCreatePost}/>
-                <PostList />
                 <button onClick={() => handleLogOut()}>Sign out</button>
+                <h4>Create new post</h4>
+                <CreatePost
+                    name={profileData.name}
+                    pictureURL={profileData.pictureURL}
+                />
+                <h4>News</h4>
+                <PostList />
             </div>
         ) : (
             <div>

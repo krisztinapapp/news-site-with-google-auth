@@ -7,35 +7,25 @@ const PostList = () => {
 
   useEffect(() => {
     const asyncReadPosts = async () => {
-      const response = await readPosts()
-        .then((res) => console.log(res))
+      await readPosts()
+        .then((res) => setPosts(res.reverse()))
         .catch((err) => console.log(err));
-      console.log(response);
-      console.log("Read posts.");
-      
     }
-        /*.then((res) => {
-          console.log(res);
-          //setPosts(res);
-        })
-        .catch((err) => console.log(err));
-        */
-
     asyncReadPosts();
   }, []);
 
   return (
     <div>
       {posts?.map((post, index) =>
-        <Post 
+        <Post
           key={index}
+          id={post.id}
           user={post.user}
           pictureURL={post.pictureURL}
           title={post.title}
           text={post.text}
         />
       )}
-      {posts ? (<h1>There are posts</h1>) : (<></>)}
     </div>
   );
 }
