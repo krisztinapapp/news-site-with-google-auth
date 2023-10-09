@@ -8,8 +8,8 @@ export interface ProfileProps {
 const Profile: FC<ProfileProps> = (props) => {
   return (
     <div>
-      <img src={props.pictureURL} alt="user profile"></img>
-      <h3>{props.name}</h3>
+      <img src={props.pictureURL} alt="user profile" className="profile-pic"></img>
+      <h2>{props.name}</h2>
     </div>
   );
 }

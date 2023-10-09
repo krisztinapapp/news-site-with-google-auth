@@ -32,20 +32,17 @@ app.post('/api/post', (req, res) => {
         if (err) res.status(500).end();
         con.query(sql, [values], (error, result) => {
             if (error) res.status(500).end();
-            res.status(200).end();
+            else res.status(200).end();
         });
     });
 });
 
 // read all posts
-app.get('/api/posts', (req, res) => {
+app.get('/api/posts', (req, res, next) => {
     const sql = "SELECT * FROM posts";
-    pool.getConnection((err, con) => {
-        if (err) res.status(500).end();
-        con.query(sql, (error, result) => {
-            if (error) res.status(500).end();
-            res.json(result);
-        });
+    pool.query(sql, (error, result) => {
+        if (error) next(error);
+        else res.json(result);
     });
 });
 
@@ -56,7 +53,7 @@ app.get('/api/post/:id', (req, res) => {
         if (err) res.status(500).end();
         con.query(sql, [req.params.id], (error, result) => {
             if (error) res.status(500).end();
-            res.json(result);
+            else res.json(result);
         });
     });
 });
@@ -75,9 +72,9 @@ app.patch('/api/post', (req, res) => {
 
     pool.getConnection((err, con) => {
         if (err) res.status(500).end();
-        con.query(sql, [values, id], (error, result) => {
+        else con.query(sql, [values, id], (error, result) => {
             if (error) res.status(500).end();
-            res.status(200).end();
+            else res.status(200).end();
         });
     });
 });
@@ -89,7 +86,7 @@ app.delete('/api/post/:id', (req, res) => {
         if (err) res.status(500).end();
         con.query(sql, [req.params.id], (error, result) => {
             if (error) res.status(500).end();
-            res.status(200).end();
+            else res.status(200).end();
         });
     });
 });
