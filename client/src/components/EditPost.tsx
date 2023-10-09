@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { readPost, updatePost } from '../api';
 import { useParams } from 'react-router-dom';
 
@@ -9,23 +9,10 @@ interface EditPostType {
 
 const EditPost = () => {
   const { id } = useParams();
-  const [ postData, setPostData ] = useState({
-    title: "",
-    text: ""
-  });
-
-  useEffect(() => {
-    const asyncReadPost = async (id: number) => {
-      await readPost(id)
-        .then((res) => setPostData(res))
-        .catch((err) => console.log(err));
-    }
-    asyncReadPost(Number(id));
-  }, []);
 
   const [ values, setValues ] = useState<EditPostType>({
-    title: postData.title,
-    text: postData.text
+    title: "",
+    text: ""
   });
 
   const handleFormChange = (e : ChangeEvent<HTMLInputElement>  | ChangeEvent<HTMLTextAreaElement>) => {
@@ -40,8 +27,23 @@ const EditPost = () => {
       console.log(newEdit);
   }
 
+  useEffect(() => {
+    const asyncReadPost = async () => {
+      await readPost(id)
+        .then((res) => {
+          setValues({
+            title: res.title,
+            text: res.text
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+    asyncReadPost();
+  }, [id]);
+
   return (
     <div>
+      <h3>Edit post</h3>
       <form onSubmit={(e) => handleEditPost(e)}>
         <label htmlFor="title">Title</label><br/>
         <input

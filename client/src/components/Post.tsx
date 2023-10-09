@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deletePost, updatePost } from '../api';
+import { deletePost } from '../api';
 
 export interface PostProps {
   id: number,
@@ -11,14 +11,9 @@ export interface PostProps {
 }
 
 const Post: FC<PostProps> = (props) => {
-  /*const handleEdit = async (id: number) => {
-    const response = await updatePost(id)
-      .catch((err) => console.log(err));
-    console.log(response);
-  }*/
 
   const handleDelete = async (id: number) => {
-    const response = await deletePost(id)
+    await deletePost(id)
       .catch((err) => console.log(err));
       window.location.reload();
   }
@@ -26,8 +21,8 @@ const Post: FC<PostProps> = (props) => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <img src={props.pictureURL} alt="user profile"></img>
+    <div className="post-div">
+      <img src={props.pictureURL} alt="user profile" className="post-pic"></img>
       <p><b>{props.user}</b> - {props.title}</p>
       <p>{props.text}</p>
       <button onClick={() => navigate(`/edit/${props.id}`)}>Edit</button>

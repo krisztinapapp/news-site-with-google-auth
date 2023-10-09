@@ -1,9 +1,9 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import PostList from './PostList';
 import CreatePost from './CreatePost';
 import Profile, { ProfileProps } from './Profile';
-import { getUserData, createPost } from '../api';
+import { getUserData } from '../api';
 
 
 
@@ -13,7 +13,6 @@ const HomePage = () => {
         pictureURL: undefined
     });
     
-
     const handleLogin = useGoogleLogin({
         onSuccess: (res) => {
             localStorage.setItem('token', res.access_token);
@@ -27,8 +26,6 @@ const HomePage = () => {
         localStorage.removeItem('token');
         window.location.reload();
     };
-
-    
 
     useEffect(() => {
         const token: any = localStorage.getItem('token');
@@ -52,18 +49,18 @@ const HomePage = () => {
             {localStorage.getItem('token') != null && localStorage.getItem('token') !== 'undefined' ? (
             <div>
                 <Profile name={profileData.name} pictureURL={profileData.pictureURL} />
-                <button onClick={() => handleLogOut()}>Sign out</button>
-                <h4>Create new post</h4>
+                <button onClick={() => handleLogOut()} className="sign-button">Sign out</button>
+                <h3>Create new post</h3>
                 <CreatePost
                     name={profileData.name}
                     pictureURL={profileData.pictureURL}
                 />
-                <h4>News</h4>
+                <h3>News</h3>
                 <PostList />
             </div>
         ) : (
             <div>
-            <button onClick={() => handleLogin()}>Sign in with Google</button>
+            <button onClick={() => handleLogin()} className="sign-button">Sign in with Google</button>
             </div>
         )}
         </div>
