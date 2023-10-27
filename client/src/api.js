@@ -47,11 +47,12 @@ const readPost = async (id) => {
     return await response.json();
 };
 
-const updatePost = async (id) => {
+const updatePost = async (id, data) => {
 
     return await fetch(`${path}/api/post/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+        body: JSON.stringify(data)
     })
 };
 

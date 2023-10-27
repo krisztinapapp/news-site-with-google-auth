@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { readPost, updatePost } from '../api';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface EditPostType {
   title: string,
@@ -15,31 +15,32 @@ const EditPost = () => {
     text: ""
   });
 
+  const navigate = useNavigate();
+
   const handleFormChange = (e : ChangeEvent<HTMLInputElement>  | ChangeEvent<HTMLTextAreaElement>) => {
     setValues({...values, [e.target.name] : e.target.value});
   }
 
   const handleEditPost = async (e : FormEvent<HTMLFormElement>) => {
-      const newEdit = await updatePost({
-          title: values.title,
-          text: values.text
-      }).catch((err) => console.log(err));
-      console.log(newEdit);
+    e.preventDefault();
+    const newEdit = await updatePost(id, {
+      title: values.title,
+      text: values.text
+    }).catch((err) => console.log(err));
+    console.log(newEdit);
+    navigate('/');
   }
 
   useEffect(() => {
     const asyncReadPost = async () => {
-      await readPost(id)
-        .then((res) => {
-          setValues({
-            title: res.title,
-            text: res.text
-          });
-        })
-        .catch((err) => console.log(err));
+      const res = await readPost(id)
+      setValues({
+        title: res.title,
+        text: res.text
+      });
     }
     asyncReadPost();
-  }, [id]);
+  }, []);
 
   return (
     <div>
