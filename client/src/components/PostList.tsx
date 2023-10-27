@@ -8,7 +8,7 @@ const PostList = () => {
   useEffect(() => {
     const asyncReadPosts = async () => {
       await readPosts()
-        .then((res) => setPosts(res.reverse()))
+        .then((res) => setPosts(res))
         .catch((err) => console.log(err));
     }
     asyncReadPosts();

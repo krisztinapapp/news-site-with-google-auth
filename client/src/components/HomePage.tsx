@@ -5,8 +5,6 @@ import CreatePost from './CreatePost';
 import Profile, { ProfileProps } from './Profile';
 import { getUserData } from '../api';
 
-
-
 const HomePage = () => {
     const [ profileData, setProfileData ] = useState<ProfileProps>({
         name: null,
